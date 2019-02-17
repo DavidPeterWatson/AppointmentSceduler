@@ -37,10 +37,10 @@ namespace AppointmentScheduler.Tests.StepDefintions
         }
 
         [And(@"an appointment for (.*) with (.*) on (.*) from (.*) till (.*) for a (.*) so that (.*)")]
-        public void GivenAnAppointment(IdType clientId, IdType MedicalPractitionerId, String Date, String FromTime, String ToTime, string Description, string Reason)
+        public void GivenAnAppointment(IdType clientId, IdType medicalPractitionerId, String date, String fromTime, String toTime, string description, string reason)
         {
-            var TimeSlot = new TimeSlot(Date, FromTime, ToTime);
-            newAppointment = new Appointment<IdType>(clientId, MedicalPractitionerId, TimeSlot, Description, Reason);
+            var timeSlot = new TimeSlot(date, fromTime, toTime);
+            newAppointment = new Appointment<IdType>(clientId, medicalPractitionerId, timeSlot, description, reason);
         }
 
         [When(@"that appointment is scheduled")]
@@ -63,25 +63,25 @@ namespace AppointmentScheduler.Tests.StepDefintions
         }
 
         [Then(@"the schedule must contain (\d+) appointment/s only")]
-        public void ThenThereMustOnlyBeNAppointments(int ExpectedAppointmentCount)
+        public void ThenThereMustOnlyBeNAppointments(int expectedAppointmentCount)
         {
-            var ActualAppointmentCount = appointmentService.GetAllAppointments(0, 1000).Count();
-            Assert.Equal(ExpectedAppointmentCount, ActualAppointmentCount);
+            var actualAppointmentCount = appointmentService.GetAllAppointments(0, 1000).Count();
+            Assert.Equal(expectedAppointmentCount, actualAppointmentCount);
         }
 
         [Then(@"the schedule must contain an appointment for (.*) with (.*) on (.*) from (.*) till (.*) for a (.*) so that (.*)")]
-        public void ThenTheScheduleMustContainAnAppointment(String ClientId, String MedicalPractitionerId, String Date, String FromTime, String ToTime, String Description, String Reason)
+        public void ThenTheScheduleMustContainAnAppointment(String clientId, String medicalPractitionerId, String date, String fromTime, String toTime, String description, String reason)
         {
-            var Query = from FindAppointment in appointmentService.GetAllAppointments(0, 1000)
-                        where FindAppointment.ClientId == ClientId
-                        && FindAppointment.MedicalPractitionerId == MedicalPractitionerId
-                        && FindAppointment.Description == Description
-                        && FindAppointment.Reason == Reason
-                        select FindAppointment;
+            var query = from findAppointment in appointmentService.GetAllAppointments(0, 1000)
+                        where findAppointment.ClientId == clientId
+                        && findAppointment.MedicalPractitionerId == medicalPractitionerId
+                        && findAppointment.Description == description
+                        && findAppointment.Reason == reason
+                        select findAppointment;
 
-            var ActualAppointment = Query.FirstOrDefault();
+            var actualAppointment = query.FirstOrDefault();
 
-            Assert.NotNull(ActualAppointment);
+            Assert.NotNull(actualAppointment);
         }
 
         [And(@"a ConflictException must be thrown")]
@@ -98,9 +98,9 @@ namespace AppointmentScheduler.Tests.StepDefintions
 
         private AppointmentServiceType CreateAppointmentService()
         {
-            IAppointmentRepository<IdType> AppointmentRepository = new InMemoryAppointmentRepository<IdType>();
+            IAppointmentRepository<IdType> appointmentRepository = new InMemoryAppointmentRepository<IdType>();
             ICalendar SimpleCalendar = new StandardWorkingCalendar();
-            AppointmentServiceType appointmentService = new AppointmentService<IdType>(AppointmentRepository, SimpleCalendar);
+            AppointmentServiceType appointmentService = new AppointmentService<IdType>(appointmentRepository, SimpleCalendar);
             return appointmentService;
         }
 

@@ -7,7 +7,7 @@ namespace AppointmentScheduler.Tests.Service
     public class StandardWorkingCalendar : ICalendar
     {
 
-        private List<DayOfWeek> WorkDays = new List<DayOfWeek>{
+        private List<DayOfWeek> workDays = new List<DayOfWeek>{
             DayOfWeek.Monday,
             DayOfWeek.Tuesday,
             DayOfWeek.Wednesday,
@@ -18,31 +18,31 @@ namespace AppointmentScheduler.Tests.Service
 
         private int endOfWorkDayHour = 17;
 
-        private int TimeSlotDurationInMinutes = 30;
+        private int timeSlotDurationInMinutes = 30;
 
-        public TimeSlot FindNextTimeSlot(DateTime FromDateTime)
+        public TimeSlot FindNextTimeSlot(DateTime fromDateTime)
         {
-            DateTime NextStartTime = FromDateTime;
-            NextStartTime = CheckIfWorkingDay(NextStartTime);
-            NextStartTime = CheckIfAfterEndOfDay(NextStartTime);
-            NextStartTime = CheckIfBeforeStartOfDay(NextStartTime);
-            NextStartTime = CheckIfStartOfTimeSlot(NextStartTime);
-            return new TimeSlot(NextStartTime, TimeSlotDurationInMinutes);
+            DateTime nextStartTime = fromDateTime;
+            nextStartTime = CheckIfWorkingDay(nextStartTime);
+            nextStartTime = CheckIfAfterEndOfDay(nextStartTime);
+            nextStartTime = CheckIfBeforeStartOfDay(nextStartTime);
+            nextStartTime = CheckIfStartOfTimeSlot(nextStartTime);
+            return new TimeSlot(nextStartTime, timeSlotDurationInMinutes);
         }
 
-        private DateTime CheckIfWorkingDay(DateTime FromDateTime)
+        private DateTime CheckIfWorkingDay(DateTime fromDateTime)
         {
-            DateTime NewDateTime = FromDateTime;
-            while (!WorkDays.Contains(NewDateTime.DayOfWeek))
+            DateTime newDateTime = fromDateTime;
+            while (!workDays.Contains(newDateTime.DayOfWeek))
             {
-                NewDateTime = StartOfNextDay(NewDateTime);
+                newDateTime = StartOfNextDay(newDateTime);
             }
-            return NewDateTime;
+            return newDateTime;
         }
 
-        private DateTime CheckIfAfterEndOfDay(DateTime FromDateTime)
+        private DateTime CheckIfAfterEndOfDay(DateTime fromDateTime)
         {
-            DateTime NewDateTime = FromDateTime;
+            DateTime NewDateTime = fromDateTime;
             if (NewDateTime.Hour > endOfWorkDayHour)
             {
                 NewDateTime = StartOfNextDay(NewDateTime);
@@ -50,30 +50,30 @@ namespace AppointmentScheduler.Tests.Service
             return NewDateTime;
         }
 
-        private DateTime CheckIfBeforeStartOfDay(DateTime FromDateTime)
+        private DateTime CheckIfBeforeStartOfDay(DateTime fromDateTime)
         {
-            DateTime NewDateTime = FromDateTime;
-            if (NewDateTime.Hour < startOfWorkDayHour)
+            DateTime newDateTime = fromDateTime;
+            if (newDateTime.Hour < startOfWorkDayHour)
             {
-                NewDateTime = new DateTime(NewDateTime.Year, NewDateTime.Month, NewDateTime.Day, startOfWorkDayHour, 0, 0);
+                newDateTime = new DateTime(newDateTime.Year, newDateTime.Month, newDateTime.Day, startOfWorkDayHour, 0, 0);
             }
-            return NewDateTime;
+            return newDateTime;
         }
 
-        private DateTime CheckIfStartOfTimeSlot(DateTime FromDateTime)
+        private DateTime CheckIfStartOfTimeSlot(DateTime fromDateTime)
         {
-            DateTime StartOfTimeSlot = new DateTime(FromDateTime.Year, FromDateTime.Month, FromDateTime.Day)
+            DateTime startOfTimeSlot = new DateTime(fromDateTime.Year, fromDateTime.Month, fromDateTime.Day)
                     .AddHours(startOfWorkDayHour);
-            while (StartOfTimeSlot < FromDateTime)
+            while (startOfTimeSlot < fromDateTime)
             {
-                StartOfTimeSlot = StartOfTimeSlot.AddMinutes(TimeSlotDurationInMinutes);
+                startOfTimeSlot = startOfTimeSlot.AddMinutes(timeSlotDurationInMinutes);
             }
-            return StartOfTimeSlot;
+            return startOfTimeSlot;
         }
 
-        private DateTime StartOfNextDay(DateTime DateTime)
+        private DateTime StartOfNextDay(DateTime dateTime)
         {
-            return new DateTime(DateTime.Year, DateTime.Month, DateTime.Day).AddDays(1);
+            return new DateTime(dateTime.Year, dateTime.Month, dateTime.Day).AddDays(1);
         }
     }
 }

@@ -6,14 +6,14 @@ namespace AppointmentScheduler.Service
 {
     public interface IAppointmentService<IdType>
     {
-        IAppointment<IdType> ScheduleAppointment(IAppointment<IdType> Appointment);
+        IAppointment<IdType> ScheduleAppointment(IAppointment<IdType> appointment);
 
-        TimeSlot FindNextTimeSlotForMedicalPractitioner(IdType MedicalPractitionerId, DateTime FromDateTime);
+        TimeSlot FindNextTimeSlotForMedicalPractitioner(IdType medicalPractitionerId, DateTime fromDateTime);
 
-        IEnumerable<IAppointment<IdType>> GetAllAppointments(int Skip, int Limit);
+        IEnumerable<IAppointment<IdType>> GetAllAppointments(int skip, int limit);
 
-        IEnumerable<IAppointment<IdType>> FindAppointmentsForMedicalPractitioner(IdType MedicalPractitionerId, int Skip, int Limit);
+        IEnumerable<IAppointment<IdType>> FindAppointmentsForMedicalPractitioner(IdType medicalPractitionerId, int skip, int limit);
 
-        IEnumerable<IAppointment<IdType>> FindAppointmentsForClient(IdType ClientId, int Skip, int Limit);
+        IEnumerable<IAppointment<IdType>> FindAppointmentsForClient(IdType clientId, int skip, int limit);
     }
 }

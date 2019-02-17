@@ -27,10 +27,11 @@ namespace AppointmentScheduler.Domain
             this.toTime = fromTime.AddMinutes(durationInMinutes);
         }
 
-        public TimeSlot(String Date, String FromTime, String ToTime) : this(Convert.ToDateTime(Date), DateTime.ParseExact(FromTime, "HH:mm", null, System.Globalization.DateTimeStyles.None), DateTime.ParseExact(ToTime, "HH:mm", null, System.Globalization.DateTimeStyles.None))
-        {
-
-        }
+        public TimeSlot(String date, String fromTime, String toTime) : 
+                this(Convert.ToDateTime(date), 
+                DateTime.ParseExact(fromTime, "HH:mm", null, System.Globalization.DateTimeStyles.None), 
+                DateTime.ParseExact(toTime, "HH:mm", null, System.Globalization.DateTimeStyles.None))
+        { }
 
         public DateTime FromDateTime
         {
@@ -54,7 +55,6 @@ namespace AppointmentScheduler.Domain
             {
                 return false;
             }
-
             return Equals((TimeSlot)obj);
         }
 
@@ -63,7 +63,6 @@ namespace AppointmentScheduler.Domain
             return obj.Key().Equals(this.Key());
         }
 
-        // override object.GetHashCode
         public override int GetHashCode()
         {
             return base.GetHashCode();
@@ -71,7 +70,10 @@ namespace AppointmentScheduler.Domain
 
         public String Key()
         {
-            return String.Format("{0} {1}-{2}", Date.ToShortDateString(), FromDateTime.ToShortTimeString(), ToDateTime.ToShortTimeString());
+            return String.Format("{0} {1}-{2}", 
+                    Date.ToShortDateString(), 
+                    FromDateTime.ToShortTimeString(), 
+                    ToDateTime.ToShortTimeString());
         }
 
         public override String ToString()

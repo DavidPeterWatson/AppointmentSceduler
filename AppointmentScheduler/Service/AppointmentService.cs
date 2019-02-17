@@ -8,62 +8,61 @@ namespace AppointmentScheduler.Service
     public class AppointmentService<IdType> : IAppointmentService<IdType>
     {
 
-        private IAppointmentRepository<IdType> AppointmentRepository;
+        private IAppointmentRepository<IdType> appointmentRepository;
 
-        private ICalendar Calendar;
+        private ICalendar calendar;
 
-        public AppointmentService(IAppointmentRepository<IdType> AppointmentRepository, ICalendar Calendar)
+        public AppointmentService(IAppointmentRepository<IdType> appointmentRepository, ICalendar calendar)
         {
-            this.AppointmentRepository = AppointmentRepository;
-            this.Calendar = Calendar;
+            this.appointmentRepository = appointmentRepository;
+            this.calendar = calendar;
         }
 
-        public IAppointment<IdType> ScheduleAppointment(IAppointment<IdType> Appointment)
+        public IAppointment<IdType> ScheduleAppointment(IAppointment<IdType> appointment)
         {
-            SaveAppointment(Appointment);
-            return Appointment;
+            SaveAppointment(appointment);
+            return appointment;
         }
 
-        public TimeSlot FindNextTimeSlotForMedicalPractitioner(IdType MedicalPractitionerId, DateTime FromDateTime)
+        public TimeSlot FindNextTimeSlotForMedicalPractitioner(IdType medicalPractitionerId, DateTime fromDateTime)
         {
-            DateTime LastAppointmentTime = FindLastAppointmentTime(MedicalPractitionerId, FromDateTime);
-            TimeSlot NextTimeSlot = Calendar.FindNextTimeSlot(LastAppointmentTime);
-            return NextTimeSlot;
+            DateTime lastAppointmentTime = FindLastAppointmentTime(medicalPractitionerId, fromDateTime);
+            TimeSlot nextTimeSlot = calendar.FindNextTimeSlot(lastAppointmentTime);
+            return nextTimeSlot;
         }
 
-        private DateTime FindLastAppointmentTime(IdType MedicalPractitionerId, DateTime FromDateTime)
+        private DateTime FindLastAppointmentTime(IdType medicalPractitionerId, DateTime fromDateTime)
         {
-            // log.Info("WebApiApplication_BeginRequest");
-            IAppointment<IdType> LastAppointment = AppointmentRepository.FindLastAppointmentForMedicalPractitioner(MedicalPractitionerId, FromDateTime);
-            if (LastAppointment != null)
+            IAppointment<IdType> lastAppointment = appointmentRepository.FindLastAppointmentForMedicalPractitioner(medicalPractitionerId, fromDateTime);
+            if (lastAppointment != null)
             {
-                return LastAppointment.TimeSlot.ToDateTime;
+                return lastAppointment.TimeSlot.ToDateTime;
             }
             else
             {
-                return FromDateTime;
+                return fromDateTime;
             }
         }
 
-        private IAppointment<IdType> SaveAppointment(IAppointment<IdType> Appointment)
+        private IAppointment<IdType> SaveAppointment(IAppointment<IdType> appointment)
         {
-            IAppointment<IdType> SavedAppointment = AppointmentRepository.SaveAppointment(Appointment);
-            return SavedAppointment;
+            IAppointment<IdType> savedAppointment = appointmentRepository.SaveAppointment(appointment);
+            return savedAppointment;
         }
 
-        public IEnumerable<IAppointment<IdType>> GetAllAppointments(int Skip, int Limit)
+        public IEnumerable<IAppointment<IdType>> GetAllAppointments(int skip, int limit)
         {
-            return AppointmentRepository.GetAllAppointments(Skip, Limit);
+            return appointmentRepository.GetAllAppointments(skip, limit);
         }
 
-        public IEnumerable<IAppointment<IdType>> FindAppointmentsForMedicalPractitioner(IdType MedicalPractitionerId, int Skip, int Limit)
+        public IEnumerable<IAppointment<IdType>> FindAppointmentsForMedicalPractitioner(IdType medicalPractitionerId, int skip, int limit)
         {
-            return AppointmentRepository.FindAppointmentsForMedicalPractitioner(MedicalPractitionerId, Skip, Limit);
+            return appointmentRepository.FindAppointmentsForMedicalPractitioner(medicalPractitionerId, skip, limit);
         }
 
-        public IEnumerable<IAppointment<IdType>> FindAppointmentsForClient(IdType ClientId, int Skip, int Limit)
+        public IEnumerable<IAppointment<IdType>> FindAppointmentsForClient(IdType ClientId, int skip, int limit)
         {
-            return AppointmentRepository.FindAppointmentsForClient(ClientId, Skip, Limit);
+            return appointmentRepository.FindAppointmentsForClient(ClientId, skip, limit);
         }
     }
 }

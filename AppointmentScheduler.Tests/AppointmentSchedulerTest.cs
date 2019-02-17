@@ -20,41 +20,41 @@ namespace AppointmentScheduler.Tests
         [Fact]
         public void SaveAppointmentTest()
         {
-            AppointmentServiceType AppointmentService = CreateAppointmentService();
-            AppointmentType NewAppointment = CreateNewTestAppointment();
-            AppointmentService.ScheduleAppointment(NewAppointment);
-            int Actual = AppointmentService.GetAllAppointments(0, 100).Count();
-            Assert.Equal(1, Actual);
+            AppointmentServiceType appointmentService = CreateAppointmentService();
+            AppointmentType newAppointment = CreateNewTestAppointment();
+            appointmentService.ScheduleAppointment(newAppointment);
+            int actual = appointmentService.GetAllAppointments(0, 100).Count();
+            Assert.Equal(1, actual);
         }
 
         [Fact]
         public void FindNextTimeSlotAfterSchedulingAppointmentTest()
         {
-            AppointmentServiceType AppointmentService = CreateAppointmentService();
-            AppointmentType NewAppointment = CreateNewTestAppointment();
-            AppointmentService.ScheduleAppointment(CreateNewTestAppointment());
-            TimeSlot ActualTimeSlot = AppointmentService.FindNextTimeSlotForMedicalPractitioner(NewAppointment.MedicalPractitionerId, NewAppointment.TimeSlot.FromDateTime);
-            TimeSlot ExpectedTimeSlot = new TimeSlot(new DateTime(2019, 02, 19, 13, 00, 0), 30);
-            Assert.Equal(ExpectedTimeSlot, ActualTimeSlot);
+            AppointmentServiceType appointmentService = CreateAppointmentService();
+            AppointmentType newAppointment = CreateNewTestAppointment();
+            appointmentService.ScheduleAppointment(CreateNewTestAppointment());
+            TimeSlot actualTimeSlot = appointmentService.FindNextTimeSlotForMedicalPractitioner(newAppointment.MedicalPractitionerId, newAppointment.TimeSlot.FromDateTime);
+            TimeSlot expectedTimeSlot = new TimeSlot(new DateTime(2019, 02, 19, 13, 00, 0), 30);
+            Assert.Equal(expectedTimeSlot, actualTimeSlot);
         }
 
         private AppointmentServiceType CreateAppointmentService()
         {
-            IAppointmentRepository<IdType> AppointmentRepository = new InMemoryAppointmentRepository<IdType>();
-            ICalendar SimpleCalendar = new StandardWorkingCalendar();
-            AppointmentServiceType AppointmentService = new AppointmentService<IdType>(AppointmentRepository, SimpleCalendar);
-            return AppointmentService;
+            IAppointmentRepository<IdType> appointmentRepository = new InMemoryAppointmentRepository<IdType>();
+            ICalendar standardWorkingCalendar = new StandardWorkingCalendar();
+            AppointmentServiceType appointmentService = new AppointmentService<IdType>(appointmentRepository, standardWorkingCalendar);
+            return appointmentService;
         }
 
         private AppointmentType CreateNewTestAppointment()
         {
-            IdType ClientId = "David";
-            IdType MedicalPractitionerId = "Dr Watson";
-            TimeSlot TimeSlot = new TimeSlot(new DateTime(2019, 02, 19, 12, 30, 0), 30);
-            String Description = "For Checkup";
-            String Reason = "";
-            AppointmentType NewAppointment = new Appointment<IdType>(ClientId, MedicalPractitionerId, TimeSlot, Description, Reason);
-            return NewAppointment;
+            IdType clientId = "David";
+            IdType medicalPractitionerId = "Dr Watson";
+            TimeSlot timeSlot = new TimeSlot(new DateTime(2019, 02, 19, 12, 30, 0), 30);
+            String description = "For Checkup";
+            String reason = "";
+            AppointmentType newAppointment = new Appointment<IdType>(clientId, medicalPractitionerId, timeSlot, description, reason);
+            return newAppointment;
         }
     }
 }

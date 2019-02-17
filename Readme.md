@@ -5,8 +5,19 @@ The purpose of the is library is to provide functionality for scheduling appoint
 ## About
 
 This project is the result of a C# test for Fixx IT, completed by David Watson.
+This project was written with VS Code on a Mac.
+Xunit.Gherkin.Quick was used for BDD tests instead of Specflow because Specflow does not run on Mac.
+
+## To Test
+
+To run the tests clone the repo and run the following commands
+dotnet restore
+dotnet build
+dotnet test
 
 ## Brief
+
+The Brief of the test was as follows:
 
 Your task is to implement part of an appointment scheduling library for a company called BestMed, a small medical practice consisting of 3 different medical practitioners.
 

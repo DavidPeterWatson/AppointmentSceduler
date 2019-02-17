@@ -12,13 +12,13 @@ namespace AppointmentScheduler.Tests.Domain
 
         public Appointment() { }
 
-        public Appointment(IdType ClientId, IdType MedicalPractitionerId, TimeSlot TimeSlot, string Description, string Reason)
+        public Appointment(IdType clientId, IdType medicalPractitionerId, TimeSlot timeSlot, string description, string reason)
         {
-            this.ClientId = ClientId;
-            this.MedicalPractitionerId = MedicalPractitionerId;
-            this.TimeSlot = TimeSlot;
-            this.Description = Description;
-            this.Reason = Reason;
+            this.ClientId = clientId;
+            this.MedicalPractitionerId = medicalPractitionerId;
+            this.TimeSlot = timeSlot;
+            this.Description = description;
+            this.Reason = reason;
         }
 
     }

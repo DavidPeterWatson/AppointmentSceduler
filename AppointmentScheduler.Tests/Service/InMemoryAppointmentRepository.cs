@@ -12,141 +12,141 @@ namespace AppointmentScheduler.Tests.Service
     public class InMemoryAppointmentRepository<IdType> : IAppointmentRepository<IdType>
     {
 
-        private ConcurrentDictionary<String, IAppointment<IdType>> Appointments = new ConcurrentDictionary<String, IAppointment<IdType>>();
-        private ConcurrentDictionary<String, IAppointment<IdType>> ClientAppointments = new ConcurrentDictionary<String, IAppointment<IdType>>();
-        private ConcurrentDictionary<String, IAppointment<IdType>> MedicalPractitionerAppointments = new ConcurrentDictionary<String, IAppointment<IdType>>();
+        private ConcurrentDictionary<String, IAppointment<IdType>> appointments = new ConcurrentDictionary<String, IAppointment<IdType>>();
+        private ConcurrentDictionary<String, IAppointment<IdType>> clientAppointments = new ConcurrentDictionary<String, IAppointment<IdType>>();
+        private ConcurrentDictionary<String, IAppointment<IdType>> medicalPractitionerAppointments = new ConcurrentDictionary<String, IAppointment<IdType>>();
 
         private Object UniqueKeyLock = new Object();
 
-        public IAppointment<IdType> FindLastAppointmentForMedicalPractitioner(IdType MedicalPractitionerId, DateTime FromDateTime)
+        public IAppointment<IdType> FindLastAppointmentForMedicalPractitioner(IdType medicalPractitionerId, DateTime fromDateTime)
         {
-            var Query = from FindAppointment in Appointments
-                        where FindAppointment.Value.MedicalPractitionerId.Equals(MedicalPractitionerId)
-                        orderby FindAppointment.Value.TimeSlot.ToDateTime descending
-                        select FindAppointment.Value;
+            var query = from findAppointment in appointments
+                        where findAppointment.Value.MedicalPractitionerId.Equals(medicalPractitionerId)
+                        orderby findAppointment.Value.TimeSlot.ToDateTime descending
+                        select findAppointment.Value;
 
-            return Query.FirstOrDefault();
+            return query.FirstOrDefault();
         }
 
-        public IEnumerable<IAppointment<IdType>> GetAllAppointments(int Skip, int Limit)
+        public IEnumerable<IAppointment<IdType>> GetAllAppointments(int skip, int limit)
         {
-            var Query = from FindAppointment in Appointments
+            var query = from FindAppointment in appointments
                         orderby FindAppointment.Value.TimeSlot.ToDateTime ascending
                         select FindAppointment.Value;
 
-            return Query.Skip(Skip).Take(Limit);
+            return query.Skip(skip).Take(limit);
         }
 
-        public IEnumerable<IAppointment<IdType>> FindAppointmentsForClient(IdType ClientId, int Skip, int Limit)
+        public IEnumerable<IAppointment<IdType>> FindAppointmentsForClient(IdType clientId, int skip, int limit)
         {
-            var Query = from FindAppointment in Appointments
-                        where FindAppointment.Value.ClientId.Equals(ClientId)
-                        orderby FindAppointment.Value.TimeSlot.ToDateTime ascending
-                        select FindAppointment.Value;
+            var query = from findAppointment in appointments
+                        where findAppointment.Value.ClientId.Equals(clientId)
+                        orderby findAppointment.Value.TimeSlot.ToDateTime ascending
+                        select findAppointment.Value;
 
-            return Query.Skip(Skip).Take(Limit);
+            return query.Skip(skip).Take(limit);
         }
 
-        public IEnumerable<IAppointment<IdType>> FindAppointmentsForMedicalPractitioner(IdType MedicalPractitionerId, int Skip, int Limit)
+        public IEnumerable<IAppointment<IdType>> FindAppointmentsForMedicalPractitioner(IdType medicalPractitionerId, int skip, int limit)
         {
-            var Query = from FindAppointment in Appointments
-                        where FindAppointment.Value.MedicalPractitionerId.Equals(MedicalPractitionerId)
-                        orderby FindAppointment.Value.TimeSlot.ToDateTime ascending
-                        select FindAppointment.Value;
+            var query = from findAppointment in appointments
+                        where findAppointment.Value.MedicalPractitionerId.Equals(medicalPractitionerId)
+                        orderby findAppointment.Value.TimeSlot.ToDateTime ascending
+                        select findAppointment.Value;
 
-            return Query.Skip(Skip).Take(Limit);
+            return query.Skip(skip).Take(limit);
         }
 
-        public IAppointment<IdType> SaveAppointment(IAppointment<IdType> Appointment)
+        public IAppointment<IdType> SaveAppointment(IAppointment<IdType> appointment)
         {
-            CheckAllUniqueKeys(Appointment);
-            AddAllUniqueKeys(Appointment);
-            return Appointment;
+            CheckAllUniqueKeys(appointment);
+            AddAllUniqueKeys(appointment);
+            return appointment;
         }
 
-        private void CheckAllUniqueKeys(IAppointment<IdType> Appointment)
+        private void CheckAllUniqueKeys(IAppointment<IdType> appointment)
         {
-            CheckPrimaryKey(Appointment);
-            CheckClientTimeSlotUniqueKey(Appointment);
-            CheckMedicalPractitionerTimeSlotUniqueKey(Appointment);
+            CheckPrimaryKey(appointment);
+            CheckClientTimeSlotUniqueKey(appointment);
+            CheckMedicalPractitionerTimeSlotUniqueKey(appointment);
         }
 
-        private void AddAllUniqueKeys(IAppointment<IdType> Appointment)
+        private void AddAllUniqueKeys(IAppointment<IdType> appointment)
         {
-            AddPrimaryKey(Appointment);
-            AddClientTimeSlotUniqueKey(Appointment);
-            AddMedicalPractitionerTimeSlotUniqueKey(Appointment);
+            AddPrimaryKey(appointment);
+            AddClientTimeSlotUniqueKey(appointment);
+            AddMedicalPractitionerTimeSlotUniqueKey(appointment);
         }
 
-        private void CheckPrimaryKey(IAppointment<IdType> Appointment)
+        private void CheckPrimaryKey(IAppointment<IdType> appointment)
         {
-            String PrimaryKey = getPrimaryKey(Appointment);
-            if (Appointments.ContainsKey(PrimaryKey))
+            String primaryKey = getPrimaryKey(appointment);
+            if (appointments.ContainsKey(primaryKey))
             {
                 throw new TimeSlotConflictException();
             }
         }
 
-        private void CheckClientTimeSlotUniqueKey(IAppointment<IdType> Appointment)
+        private void CheckClientTimeSlotUniqueKey(IAppointment<IdType> appointment)
         {
-            String ClientUniqueKey = getClientTimeSlotUniqueKey(Appointment);
-            if (ClientAppointments.ContainsKey(ClientUniqueKey))
+            String clientUniqueKey = getClientTimeSlotUniqueKey(appointment);
+            if (clientAppointments.ContainsKey(clientUniqueKey))
             {
                 throw new TimeSlotConflictException();
             }
         }
 
-        private void CheckMedicalPractitionerTimeSlotUniqueKey(IAppointment<IdType> Appointment)
+        private void CheckMedicalPractitionerTimeSlotUniqueKey(IAppointment<IdType> appointment)
         {
-            String MedicalPractitionerUniqueKey = getMedicalPractitionerTimeSlotUniqueKey(Appointment);
-            if (MedicalPractitionerAppointments.ContainsKey(MedicalPractitionerUniqueKey))
+            String medicalPractitionerUniqueKey = getMedicalPractitionerTimeSlotUniqueKey(appointment);
+            if (medicalPractitionerAppointments.ContainsKey(medicalPractitionerUniqueKey))
             {
                 throw new TimeSlotConflictException();
             }
         }
 
-        private void AddPrimaryKey(IAppointment<IdType> Appointment)
+        private void AddPrimaryKey(IAppointment<IdType> appointment)
         {
-            String PrimaryKey = getPrimaryKey(Appointment);
-            if (!Appointments.TryAdd(PrimaryKey, Appointment))
+            String primaryKey = getPrimaryKey(appointment);
+            if (!appointments.TryAdd(primaryKey, appointment))
             {
                 throw new TimeSlotConflictException();
             }
         }
 
-        private void AddClientTimeSlotUniqueKey(IAppointment<IdType> Appointment)
+        private void AddClientTimeSlotUniqueKey(IAppointment<IdType> appointment)
         {
-            String ClientUniqueKey = getClientTimeSlotUniqueKey(Appointment);
-            if (!ClientAppointments.TryAdd(ClientUniqueKey, Appointment))
+            String clientUniqueKey = getClientTimeSlotUniqueKey(appointment);
+            if (!clientAppointments.TryAdd(clientUniqueKey, appointment))
             {
                 throw new TimeSlotConflictException();
             }
         }
 
-        private void AddMedicalPractitionerTimeSlotUniqueKey(IAppointment<IdType> Appointment)
+        private void AddMedicalPractitionerTimeSlotUniqueKey(IAppointment<IdType> appointment)
         {
-            String MedicalPractitionerUniqueKey = getMedicalPractitionerTimeSlotUniqueKey(Appointment);
-            if (!MedicalPractitionerAppointments.TryAdd(MedicalPractitionerUniqueKey, Appointment))
+            String medicalPractitionerUniqueKey = getMedicalPractitionerTimeSlotUniqueKey(appointment);
+            if (!medicalPractitionerAppointments.TryAdd(medicalPractitionerUniqueKey, appointment))
             {
                 throw new TimeSlotConflictException();
             }
         }
 
-        private String getPrimaryKey(IAppointment<IdType> Appointment)
+        private String getPrimaryKey(IAppointment<IdType> appointment)
         {
-            String primaryKey = String.Format("{0},{1},{2}", Appointment.ClientId, Appointment.MedicalPractitionerId.ToString(), Appointment.TimeSlot.Key());
+            String primaryKey = String.Format("{0},{1},{2}", appointment.ClientId, appointment.MedicalPractitionerId.ToString(), appointment.TimeSlot.Key());
             return primaryKey;
         }
 
-        private String getClientTimeSlotUniqueKey(IAppointment<IdType> Appointment)
+        private String getClientTimeSlotUniqueKey(IAppointment<IdType> appointment)
         {
-            String clientUniqueKey = String.Format("{0},{1}", Appointment.ClientId, Appointment.TimeSlot.Key());
+            String clientUniqueKey = String.Format("{0},{1}", appointment.ClientId, appointment.TimeSlot.Key());
             return clientUniqueKey;
         }
 
-        private String getMedicalPractitionerTimeSlotUniqueKey(IAppointment<IdType> Appointment)
+        private String getMedicalPractitionerTimeSlotUniqueKey(IAppointment<IdType> appointment)
         {
-            String medicalPractitionerUniqueKey = String.Format("{0},{1}", Appointment.MedicalPractitionerId.ToString(), Appointment.TimeSlot.Key());
+            String medicalPractitionerUniqueKey = String.Format("{0},{1}", appointment.MedicalPractitionerId.ToString(), appointment.TimeSlot.Key());
             return medicalPractitionerUniqueKey;
         }
     }
