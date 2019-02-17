@@ -13,13 +13,13 @@ namespace domain {
         + DateTime FromTime
         + DateTime ToTime
         + String ClientId
-        + String MedicalPractionerId
+        + String MedicalPractitionersId
         + String Description
         + String Reason
     }
 
-    class MedicalPractioner {
-        + String MedicalPractionerId
+    class MedicalPractitioners {
+        + String MedicalPractitionersId
         + String Name
     }
 
@@ -30,7 +30,7 @@ namespace domain {
 
     Appointment -d-> TimeSlot
     Appointment -d-> Client
-    Appointment -d-> MedicalPractioner
+    Appointment -d-> MedicalPractitioners
 }
 
 namespace service {
@@ -40,7 +40,7 @@ namespace service {
     }
 
     class Calendar {
-        TimeSlot FindNextTimeSlot(MedicalPractionerId)
+        TimeSlot FindNextTimeSlot(MedicalPractitionersId)
     }
 }
 
@@ -52,8 +52,5 @@ namespace repository {
     }
 
 }
-
-' domain -d-> service
-' service -d-> repository
 
 @enduml
