@@ -3,15 +3,16 @@ using AppointmentScheduler.Service;
 using AppointmentScheduler.Tests.Domain;
 using AppointmentScheduler.Tests.Service;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Xunit;
 
 using IdType = System.String;
 using AppointmentType = AppointmentScheduler.Domain.IAppointment<System.String>;
 using AppointmentServiceType = AppointmentScheduler.Service.IAppointmentService<System.String>;
-using System.Collections.Generic;
-using System.Linq;
 
-namespace AppointmentScheduler.AcceptanceTests
+
+namespace AppointmentScheduler.Tests
 {
     public class AppointmentSchedulerTest
     {
@@ -39,20 +40,20 @@ namespace AppointmentScheduler.AcceptanceTests
 
         private AppointmentServiceType CreateAppointmentService()
         {
-            IAppointmentRepository<String> AppointmentRepository = new InMemoryAppointmentRepository<String>();
+            IAppointmentRepository<IdType> AppointmentRepository = new InMemoryAppointmentRepository<IdType>();
             ICalendar SimpleCalendar = new StandardWorkingCalendar();
-            AppointmentServiceType AppointmentService = new AppointmentService<String>(AppointmentRepository, SimpleCalendar);
+            AppointmentServiceType AppointmentService = new AppointmentService<IdType>(AppointmentRepository, SimpleCalendar);
             return AppointmentService;
         }
 
         private AppointmentType CreateNewTestAppointment()
         {
-            String ClientId = "David";
-            String MedicalPractitionerId = "Dr Watson";
+            IdType ClientId = "David";
+            IdType MedicalPractitionerId = "Dr Watson";
             TimeSlot TimeSlot = new TimeSlot(new DateTime(2019, 02, 19, 12, 30, 0), 30);
             String Description = "For Checkup";
             String Reason = "";
-            AppointmentType NewAppointment = new Appointment<System.String>(ClientId, MedicalPractitionerId, TimeSlot, Description, Reason);
+            AppointmentType NewAppointment = new Appointment<IdType>(ClientId, MedicalPractitionerId, TimeSlot, Description, Reason);
             return NewAppointment;
         }
     }

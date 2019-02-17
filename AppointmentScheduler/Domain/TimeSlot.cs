@@ -17,7 +17,7 @@ namespace AppointmentScheduler.Domain
         {
             this.date = date;
             this.fromTime = date.AddHours(fromTime.Hour).AddMinutes(fromTime.Minute);
-            this.toTime = date.AddHours(toTime.Hour).AddMinutes(toTime.Minute);;
+            this.toTime = date.AddHours(toTime.Hour).AddMinutes(toTime.Minute); ;
         }
 
         public TimeSlot(DateTime fromDateTime, int durationInMinutes)
@@ -25,6 +25,11 @@ namespace AppointmentScheduler.Domain
             this.date = new DateTime(fromDateTime.Year, fromDateTime.Month, fromDateTime.Day);
             this.fromTime = fromDateTime;
             this.toTime = fromTime.AddMinutes(durationInMinutes);
+        }
+
+        public TimeSlot(String Date, String FromTime, String ToTime) : this(Convert.ToDateTime(Date), DateTime.ParseExact(FromTime, "HH:mm", null, System.Globalization.DateTimeStyles.None), DateTime.ParseExact(ToTime, "HH:mm", null, System.Globalization.DateTimeStyles.None))
+        {
+
         }
 
         public DateTime FromDateTime
@@ -45,13 +50,6 @@ namespace AppointmentScheduler.Domain
 
         public override bool Equals(object obj)
         {
-            //
-            // See the full list of guidelines at
-            //   http://go.microsoft.com/fwlink/?LinkID=85237
-            // and also the guidance for operator== at
-            //   http://go.microsoft.com/fwlink/?LinkId=85238
-            //
-
             if (obj == null || GetType() != obj.GetType())
             {
                 return false;
@@ -62,16 +60,23 @@ namespace AppointmentScheduler.Domain
 
         public bool Equals(TimeSlot obj)
         {
-            return obj.Date.Equals(Date)
-                && obj.FromTime.Equals(this.FromTime)
-                && obj.ToTime.Equals(this.ToTime);
-
+            return obj.Key().Equals(this.Key());
         }
 
         // override object.GetHashCode
         public override int GetHashCode()
         {
             return base.GetHashCode();
+        }
+
+        public String Key()
+        {
+            return String.Format("{0} {1}-{2}", Date.ToShortDateString(), FromDateTime.ToShortTimeString(), ToDateTime.ToShortTimeString());
+        }
+
+        public override String ToString()
+        {
+            return Key();
         }
     }
 }

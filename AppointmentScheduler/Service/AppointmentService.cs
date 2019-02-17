@@ -1,4 +1,5 @@
 using AppointmentScheduler.Domain;
+using AppointmentScheduler.Exception;
 using System;
 using System.Collections.Generic;
 
@@ -19,21 +20,29 @@ namespace AppointmentScheduler.Service
 
         public IAppointment<IdType> ScheduleAppointment(IAppointment<IdType> Appointment)
         {
-            ValidateInput(Appointment);
-            IAppointment<IdType> SavedAppointment = SaveAppointment(Appointment);
-            return SavedAppointment;
+            SaveAppointment(Appointment);
+            return Appointment;
         }
 
         public TimeSlot FindNextTimeSlotForMedicalPractitioner(IdType MedicalPractitionerId, DateTime FromDateTime)
         {
-            IAppointment<IdType> LastAppointment = AppointmentRepository.FindLastAppointmentForMedicalPractitioner(MedicalPractitionerId, FromDateTime);
-            TimeSlot NextTimeSlot = Calendar.FindNextTimeSlot(LastAppointment.TimeSlot.ToDateTime);
+            DateTime LastAppointmentTime = FindLastAppointmentTime(MedicalPractitionerId, FromDateTime);
+            TimeSlot NextTimeSlot = Calendar.FindNextTimeSlot(LastAppointmentTime);
             return NextTimeSlot;
         }
 
-        private void ValidateInput(IAppointment<IdType> Appointment)
+        private DateTime FindLastAppointmentTime(IdType MedicalPractitionerId, DateTime FromDateTime)
         {
-            //ToDo check values
+            // log.Info("WebApiApplication_BeginRequest");
+            IAppointment<IdType> LastAppointment = AppointmentRepository.FindLastAppointmentForMedicalPractitioner(MedicalPractitionerId, FromDateTime);
+            if (LastAppointment != null)
+            {
+                return LastAppointment.TimeSlot.ToDateTime;
+            }
+            else
+            {
+                return FromDateTime;
+            }
         }
 
         private IAppointment<IdType> SaveAppointment(IAppointment<IdType> Appointment)
@@ -47,14 +56,14 @@ namespace AppointmentScheduler.Service
             return AppointmentRepository.GetAllAppointments(Skip, Limit);
         }
 
-        public IEnumerable<IAppointment<IdType>> GetAppointmentsForMedicalPractitioner(IdType MedicalPractitionerId, int Skip, int Limit)
+        public IEnumerable<IAppointment<IdType>> FindAppointmentsForMedicalPractitioner(IdType MedicalPractitionerId, int Skip, int Limit)
         {
-            return AppointmentRepository.GetAppointmentsForMedicalPractitioner(MedicalPractitionerId, Skip, Limit);
+            return AppointmentRepository.FindAppointmentsForMedicalPractitioner(MedicalPractitionerId, Skip, Limit);
         }
 
-        public IEnumerable<IAppointment<IdType>> GetAppointmentsForClient(IdType ClientId, int Skip, int Limit)
+        public IEnumerable<IAppointment<IdType>> FindAppointmentsForClient(IdType ClientId, int Skip, int Limit)
         {
-            return AppointmentRepository.GetAppointmentsForClient(ClientId, Skip, Limit);
+            return AppointmentRepository.FindAppointmentsForClient(ClientId, Skip, Limit);
         }
     }
 }
