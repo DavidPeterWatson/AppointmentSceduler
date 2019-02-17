@@ -1,0 +1,56 @@
+@startuml Appointment Scheduler Class Diagram
+
+namespace domain {
+
+    class TimeSlot {
+        + DateTime Date
+        + DateTime FromTime
+        + DateTime ToTime
+    }
+
+    class Appointment {
+        + DateTime Date
+        + DateTime FromTime
+        + DateTime ToTime
+        + String ClientId
+        + String MedicalPractitionersId
+        + String Description
+        + String Reason
+    }
+
+    class MedicalPractitioners {
+        + String MedicalPractitionersId
+        + String Name
+    }
+
+    class Client {
+        + String ClientId
+        + String Name
+    }
+
+    Appointment -d-> TimeSlot
+    Appointment -d-> Client
+    Appointment -d-> MedicalPractitioners
+}
+
+namespace service {
+
+    class Scheduler {
+        Appointment ScheduleAppointment(Appointment)
+    }
+
+    class Calendar {
+        TimeSlot FindNextTimeSlot(MedicalPractitionersId)
+    }
+}
+
+namespace repository {
+
+    class AppointmentRepository {
+        Appointment SaveAppointment(Appointment)
+        void DeleteAppointment(AppointmentId)
+    }
+
+}
+
+@enduml
