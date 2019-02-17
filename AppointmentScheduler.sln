@@ -1,8 +1,5 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26124.0
-MinimumVisualStudioVersion = 15.0.26124.0
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppointmentScheduler", "AppointmentScheduler\AppointmentScheduler.csproj", "{F86C17EF-9A8B-4BAA-A321-D8B7739E3D7D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppointmentScheduler.Tests", "AppointmentScheduler.Tests\AppointmentScheduler.Tests.csproj", "{7FBD1F25-CEE5-42D6-A78C-FED16853FC11}"
